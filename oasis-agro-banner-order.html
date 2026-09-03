@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Заказ баннера — Oasis Agro</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --green-dark: #056839;
+    --green-mid: #239953;
+    --green-light: #94BAA7;
+    --beige: #DDCAB2;
+    --white: #FFFFFF;
+    --text: #1a1a1a;
+    --text-muted: #555;
+    --border: #e0e0e0;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Inter', sans-serif; color: var(--text); background: #f7f7f5; line-height: 1.6; }
+
+  @import url('https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&family=Inter:wght@300;400;500;600&display=swap');
+
+  /* HEADER */
+  .site-header {
+    background: var(--green-dark);
+    padding: 16px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-logo { display: flex; align-items: center; gap: 12px; }
+  .header-logo img { height: 40px; width: auto; }
+  .header-nav { display: flex; gap: 24px; }
+  .header-nav a { color: rgba(255,255,255,0.85); text-decoration: none; font-size: 14px; transition: color 0.2s; }
+  .header-nav a:hover { color: white; }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, var(--green-dark) 0%, var(--green-mid) 100%);
+    color: white;
+    padding: 80px 40px 70px;
+    text-align: center;
+  }
+  .hero-eyebrow { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.6); margin-bottom: 16px; }
+  .hero h1 { font-family: 'PT Sans', sans-serif; font-size: clamp(30px, 5vw, 50px); font-weight: 700; line-height: 1.15; margin-bottom: 20px; }
+  .hero p { font-size: 16px; color: rgba(255,255,255,0.82); max-width: 620px; margin: 0 auto 36px; line-height: 1.7; }
+  .hero-cta { display: inline-block; background: white; color: var(--green-dark); font-weight: 600; font-size: 15px; padding: 14px 36px; border-radius: 4px; text-decoration: none; transition: background 0.2s; }
+  .hero-cta:hover { background: var(--beige); }
+
+  /* SECTIONS */
+  .section { max-width: 1000px; margin: 0 auto; padding: 68px 40px; }
+  .section-label { font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--green-mid); font-weight: 600; margin-bottom: 10px; }
+  .section-title { font-family: 'PT Sans', sans-serif; font-size: clamp(22px, 3vw, 32px); font-weight: 700; color: var(--green-dark); margin-bottom: 14px; }
+  .section-desc { color: var(--text-muted); font-size: 15px; max-width: 680px; line-height: 1.75; margin-bottom: 40px; }
+  .divider { border: none; border-top: 1px solid var(--border); max-width: 1000px; margin: 0 auto; }
+
+  /* BANNER CARDS */
+  .banners-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .banner-card { background: white; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); transition: box-shadow 0.2s; }
+  .banner-card:hover { box-shadow: 0 6px 28px rgba(5,104,57,0.12); }
+  .banner-card.coming-soon { opacity: 0.55; }
+  .banner-img-wrap { position: relative; overflow: hidden; background: #f0f0f0; }
+  .banner-img { width: 100%; display: block; cursor: zoom-in; transition: transform 0.3s; }
+  .banner-img:hover { transform: scale(1.02); }
+  .banner-sub { margin-top: 2px; }
+  .banner-sub-img { width: 100%; display: block; border-top: 1px solid var(--border); cursor: zoom-in; transition: transform 0.3s; }
+  .banner-sub-img:hover { transform: scale(1.02); }
+  .banner-info { padding: 18px 20px 20px; }
+  .banner-num { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--green-mid); font-weight: 600; margin-bottom: 4px; }
+  .banner-name { font-family: 'PT Sans', sans-serif; font-size: 17px; font-weight: 700; color: var(--green-dark); margin-bottom: 10px; }
+  .banner-formats { display: flex; flex-direction: column; gap: 4px; }
+  .banner-format-row { font-size: 13px; color: var(--text-muted); }
+  .banner-format-row strong { color: var(--text); }
+  .banner-tag { display: inline-block; margin-top: 12px; background: #eaf5ef; color: var(--green-dark); font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 3px; }
+  .banner-tag.pending { background: #f5f0e8; color: #8a6a30; }
+  .banner-placeholder { width: 100%; aspect-ratio: 16/9; background: linear-gradient(135deg, var(--green-light), var(--beige)); display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 8px; color: var(--green-dark); font-size: 13px; opacity: 0.7; }
+
+  /* LIGHTBOX */
+  .lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
+  .lightbox.active { display: flex; }
+  .lightbox img { max-width: 95vw; max-height: 90vh; object-fit: contain; border-radius: 4px; }
+  .lightbox-close { position: absolute; top: 20px; right: 28px; color: white; font-size: 36px; cursor: pointer; opacity: 0.8; line-height: 1; }
+  .lightbox-close:hover { opacity: 1; }
+
+  /* SIZES NOTE */
+  .sizes-note { background: #eaf5ef; border-left: 3px solid var(--green-mid); padding: 16px 20px; border-radius: 0 6px 6px 0; font-size: 14px; color: var(--green-dark); line-height: 1.7; margin-top: 32px; }
+
+  /* PERSONALISATION */
+  .personal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+  .personal-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 24px; }
+  .personal-card h4 { font-family: 'PT Sans', sans-serif; font-size: 16px; font-weight: 700; color: var(--green-dark); margin-bottom: 10px; }
+  .personal-card p { font-size: 14px; color: var(--text-muted); line-height: 1.65; }
+  .color-swatches { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+  .swatch-wrap { display: flex; flex-direction: column; align-items: center; }
+  .swatch { width: 34px; height: 34px; border-radius: 50%; border: 2px solid rgba(0,0,0,0.08); }
+  .swatch-label { font-size: 10px; color: var(--text-muted); text-align: center; margin-top: 3px; width: 52px; line-height: 1.3; }
+  .fixed-note { background: #fff8f0; border: 1px solid #f0dbb8; border-radius: 6px; padding: 14px 18px; font-size: 14px; color: #7a5a1e; margin-top: 16px; line-height: 1.65; }
+
+  /* LOGISTICS */
+  .logistics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .logistics-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 26px 22px; display: flex; gap: 16px; align-items: flex-start; }
+  .logistics-icon { width: 42px; height: 42px; background: #eaf5ef; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 18px; }
+  .logistics-card h4 { font-family: 'PT Sans', sans-serif; font-size: 15px; font-weight: 700; color: var(--green-dark); margin-bottom: 6px; }
+  .logistics-card p { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+  .logistics-card .highlight { font-weight: 600; color: var(--green-dark); }
+
+  /* FORM */
+  .form-section { background: white; border-radius: 10px; border: 1px solid var(--border); padding: 40px; }
+  .form-section h3 { font-family: 'PT Sans', sans-serif; font-size: 22px; font-weight: 700; color: var(--green-dark); margin-bottom: 6px; }
+  .form-intro { color: var(--text-muted); font-size: 14px; margin-bottom: 30px; }
+  .form-row { margin-bottom: 18px; }
+  .form-row label { display: block; font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+  .form-row label .req { color: var(--green-mid); margin-left: 2px; }
+  .form-row input, .form-row select, .form-row textarea { width: 100%; border: 1px solid #d0d0d0; border-radius: 5px; padding: 11px 14px; font-size: 14px; font-family: 'Inter', sans-serif; color: var(--text); background: #fafafa; transition: border-color 0.2s, box-shadow 0.2s; outline: none; appearance: none; -webkit-appearance: none; }
+  .form-row input:focus, .form-row select:focus, .form-row textarea:focus { border-color: var(--green-mid); box-shadow: 0 0 0 3px rgba(35,153,83,0.1); background: white; }
+  .form-row textarea { resize: vertical; min-height: 85px; }
+  .form-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .form-submit { margin-top: 26px; text-align: right; }
+  .btn-submit { background: var(--green-dark); color: white; border: none; padding: 14px 40px; font-size: 15px; font-weight: 600; font-family: 'Inter', sans-serif; border-radius: 5px; cursor: pointer; transition: background 0.2s, transform 0.15s; }
+  .btn-submit:hover { background: var(--green-mid); transform: translateY(-1px); }
+  .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+  .form-note { font-size: 12px; color: var(--text-muted); margin-top: 10px; text-align: right; }
+  .form-success { display: none; background: #eaf5ef; border: 1px solid var(--green-mid); border-radius: 8px; padding: 20px 24px; text-align: center; margin-top: 20px; }
+  .form-success h4 { color: var(--green-dark); font-size: 16px; margin-bottom: 6px; }
+  .form-success p { color: var(--text-muted); font-size: 14px; }
+
+  /* CUSTOM */
+  .custom-block { background: linear-gradient(135deg, #f5f0e8 0%, #eef5f0 100%); border: 1px solid var(--beige); border-radius: 10px; padding: 36px 40px; }
+  .custom-block h3 { font-family: 'PT Sans', sans-serif; font-size: 20px; font-weight: 700; color: var(--green-dark); margin-bottom: 14px; }
+  .custom-block p { font-size: 14.5px; color: var(--text-muted); line-height: 1.75; margin-bottom: 10px; }
+  .custom-block p:last-child { margin-bottom: 0; }
+
+  /* CONTACTS */
+  .contacts-card { background: var(--green-dark); color: white; border-radius: 10px; padding: 40px; display: flex; justify-content: space-between; align-items: center; gap: 32px; }
+  .contacts-card h3 { font-family: 'PT Sans', sans-serif; font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+  .contacts-card .sub { font-size: 14px; color: rgba(255,255,255,0.65); margin-bottom: 22px; }
+  .contact-item { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; font-size: 15px; }
+  .contact-item a { color: white; text-decoration: none; }
+  .contact-item a:hover { text-decoration: underline; }
+  .contacts-right { text-align: right; color: rgba(255,255,255,0.45); font-size: 13px; line-height: 2; }
+  .contacts-right img { height: 36px; width: auto; filter: brightness(0) invert(1); opacity: 0.6; margin-bottom: 8px; display: block; margin-left: auto; }
+
+  /* FOOTER */
+  .site-footer { background: #111; color: rgba(255,255,255,0.4); text-align: center; padding: 22px; font-size: 13px; }
+
+  /* RESPONSIVE */
+  @media (max-width: 720px) {
+    .site-header { padding: 14px 20px; }
+    .header-nav { display: none; }
+    .section { padding: 44px 20px; }
+    .banners-grid, .personal-grid, .logistics-grid, .form-two-col { grid-template-columns: 1fr; }
+    .hero { padding: 52px 20px 44px; }
+    .contacts-card { flex-direction: column; }
+    .form-section, .custom-block { padding: 24px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-logo">
+    <img src="https://oasisagroorg.wordpress.com/wp-content/uploads/2026/08/d09ed0b0d0b7d0b8d181-d090d0b3d180d0be-d0bfd0bdd0b3.png" alt="Oasis Agro">
+  </div>
+  <nav class="header-nav">
+    <a href="#banners">Варианты баннеров</a>
+    <a href="#personal">Персонализация</a>
+    <a href="#order">Оформить заявку</a>
+    <a href="#contacts">Контакты</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="hero-eyebrow">Рекламные материалы для торговых точек</div>
+  <h1>Баннеры Oasis Agro<br>для вашей точки</h1>
+  <p>Мы подготовили стандартизированные баннеры в едином фирменном стиле — чтобы каждая точка, работающая с нашей продукцией, выглядела профессионально и узнаваемо. Выберите подходящий вариант и оформите заявку прямо здесь.</p>
+  <a href="#order" class="hero-cta">Оформить заявку</a>
+</section>
+
+<section class="section" id="banners">
+  <div class="section-label">Шаг 1</div>
+  <h2 class="section-title">Выберите вариант баннера</h2>
+  <p class="section-desc">Нажмите на баннер, чтобы рассмотреть детали крупнее.</p>
+
+  <div class="banners-grid">
+
+    <div class="banner-card">
+      <div class="banner-img-wrap">
+        <img class="banner-img" src="https://oasisagroorg.wordpress.com/wp-content/uploads/2026/08/1-d0b2d0b8d0b4-d0b1d0b0d0bdd0bdd0b5d180d0b0.png" alt="Баннер 1 — формат 4×3" onclick="openLightbox(this.src)">
+        <div class="banner-sub">
+          <img class="banner-sub-img" src="https://oasisagroorg.wordpress.com/wp-content/uploads/2026/08/1-d0b2d0b8d0b4-d0b1d0b0d0bdd0bdd0b5d180d0b0-2.png" alt="Баннер 1 — формат 2×1" onclick="openLightbox(this.src)">
+        </div>
+      </div>
+      <div class="banner-info">
+        <div class="banner-num">Баннер 1</div>
+        <div class="banner-name">Горизонтальный</div>
+        <div class="banner-formats">
+          <div class="banner-format-row"><strong>Формат 4×3</strong> (например: 116×87 см, 160×120 см, 240×180 см)</div>
+          <div class="banner-format-row" style="margin-top:6px;"><strong>Формат 2×1</strong> (например: 175×87 см, 200×100 см, 300×150 см)</div>
+        </div>
+        <span class="banner-tag">✓ Доступен</span>
+      </div>
+    </div>
+
+    <div class="banner-card">
+      <div class="banner-img-wrap">
+        <img class="banner-img" src="https://oasisagroorg.wordpress.com/wp-content/uploads/2026/08/2-d0b2d0b8d0b4-d0b1d0b0d0bdd0bdd0b5d180d0b0.png" alt="Баннер 2 — формат 3×2" onclick="openLightbox(this.src)">
+      </div>
+      <div class="banner-info">
+        <div class="banner-num">Баннер 2</div>
+        <div class="banner-name">Горизонтальный</div>
+        <div class="banner-formats">
+          <div class="banner-format-row"><strong>Формат 3×2</strong> (например: 153×94 см, 180×120 см, 300×200 см)</div>
+        </div>
+        <span class="banner-tag">✓ Доступен</span>
+      </div>
+    </div>
+
+    <div class="banner-card coming-soon">
+      <div class="banner-placeholder">
+        <svg width="40" height="40" fill="none" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" stroke="#056839" stroke-width="1.5"/><path d="M3 9l4-4 4 4 4-6 6 6" stroke="#056839" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Скоро
+      </div>
+      <div class="banner-info">
+        <div class="banner-num">Баннер 3</div>
+        <div class="banner-name">В разработке</div>
+        <div class="banner-formats">
+          <div class="banner-format-row">Готовится. Следите за обновлениями.</div>
+        </div>
+        <span class="banner-tag pending">⏳ Скоро</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="sizes-note">
+    <strong>О размерах:</strong> Вы выбираете формат (пропорцию сторон), а нужные метры указываете в заявке — макет подгоняется под них без потери качества. Единственное техническое ограничение: одна из сторон баннера не может превышать <strong>3 метра</strong> — это максимальная ширина рулона, на котором печатается баннерная ткань. Вторая сторона при этом может быть любой длины — хоть 10 метров. Проще говоря: одна сторона до 3 м, вторая — сколько угодно.
+  </div>
+</section>
+
+<hr class="divider">
+
+<section class="section" id="personal">
+  <div class="section-label">Шаг 2</div>
+  <h2 class="section-title">Варианты персонализации</h2>
+  <p class="section-desc">Мы можем адаптировать баннер под вашу точку в рамках фирменного стиля Oasis Agro.</p>
+
+  <div class="personal-grid">
+    <div class="personal-card">
+      <h4>📍 Данные торговой точки</h4>
+      <p>На баннере можно разместить название вашей точки, адрес или контактный номер телефона. Укажите нужные данные в заявке.</p>
+    </div>
+    <div class="personal-card">
+      <h4>🎨 Цвет заголовка</h4>
+      <p>Выберите цвет главного заголовка из утверждённой фирменной палитры:</p>
+      <div class="color-swatches">
+        <div class="swatch-wrap"><div class="swatch" style="background:#056839;"></div><div class="swatch-label">Тёмно-зелёный</div></div>
+        <div class="swatch-wrap"><div class="swatch" style="background:#239953;"></div><div class="swatch-label">Зелёный</div></div>
+        <div class="swatch-wrap"><div class="swatch" style="background:#FFFFFF; border-color:#ccc;"></div><div class="swatch-label">Белый</div></div>
+        <div class="swatch-wrap"><div class="swatch" style="background:#DDCAB2;"></div><div class="swatch-label">Бежевый</div></div>
+        <div class="swatch-wrap"><div class="swatch" style="background:#F5C518;"></div><div class="swatch-label">Жёлтый</div></div>
+        <div class="swatch-wrap"><div class="swatch" style="background:#6B3A2A;"></div><div class="swatch-label">Коричневый</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="fixed-note">
+    <strong>Что не меняется:</strong> логотип Oasis Agro, его расположение, фирменные шрифты, основная композиция макета и двуязычие (рус + кырг). Это гарантирует единый фирменный стиль на всех точках.
+  </div>
+</section>
+
+<hr class="divider">
+
+<section class="section" id="logistics">
+  <div class="section-label">Условия</div>
+  <h2 class="section-title">Сроки и получение</h2>
+  <div class="logistics-grid">
+    <div class="logistics-card">
+      <div class="logistics-icon">🕐</div>
+      <div>
+        <h4>Срок изготовления</h4>
+        <p><span class="highlight">3–5 рабочих дней</span> с момента подтверждения заявки менеджером по маркетингу.</p>
+      </div>
+    </div>
+    <div class="logistics-card">
+      <div class="logistics-icon">📦</div>
+      <div>
+        <h4>Получение</h4>
+        <p>Готовый баннер забирается в <span class="highlight">отделе продаж в офисе Oasis Agro</span>.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section class="section" id="order">
+  <div class="section-label">Заявка</div>
+  <h2 class="section-title">Оформить заказ баннера</h2>
+  <p class="section-desc">Заполните форму — менеджер по маркетингу свяжется с вами для подтверждения в течение 1 рабочего дня.</p>
+
+  <div class="form-section">
+    <h3>Заявка на баннер</h3>
+    <p class="form-intro">Поля, отмеченные *, обязательны для заполнения.</p>
+
+    <div class="form-two-col">
+      <div class="form-row">
+        <label>Название торговой точки <span class="req">*</span></label>
+        <input type="text" id="f-name" placeholder="Например: Магазин «Агро-Центр»">
+      </div>
+      <div class="form-row">
+        <label>Контактное лицо <span class="req">*</span></label>
+        <input type="text" id="f-contact" placeholder="Ваше имя">
+      </div>
+    </div>
+
+    <div class="form-two-col">
+      <div class="form-row">
+        <label>Номер телефона <span class="req">*</span></label>
+        <input type="tel" id="f-phone" placeholder="+996 ___ ___ ___">
+      </div>
+      <div class="form-row">
+        <label>WhatsApp (если отличается)</label>
+        <input type="tel" id="f-whatsapp" placeholder="+996 ___ ___ ___">
+      </div>
+    </div>
+
+    <div class="form-two-col">
+      <div class="form-row">
+        <label>Вариант баннера <span class="req">*</span></label>
+        <select id="f-banner">
+          <option value="" disabled selected>Выберите вариант</option>
+          <option>Баннер 1</option>
+          <option>Баннер 2</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label>Формат <span class="req">*</span></label>
+        <select id="f-format">
+          <option value="" disabled selected>Выберите формат</option>
+          <option>Горизонтальный 4×3</option>
+          <option>Горизонтальный 2×1</option>
+          <option>Горизонтальный 3×2</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-two-col">
+      <div class="form-row">
+        <label>Нужный размер (в метрах) <span class="req">*</span></label>
+        <input type="text" id="f-size" placeholder="Например: 1.5 × 3 м">
+      </div>
+      <div class="form-row">
+        <label>К какой дате нужен баннер? <span class="req">*</span></label>
+        <input type="date" id="f-deadline">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <label>Цвет заголовка</label>
+      <select id="f-color">
+        <option value="По умолчанию">По умолчанию (из макета)</option>
+        <option>Тёмно-зелёный (#056839)</option>
+        <option>Зелёный (#239953)</option>
+        <option>Белый (#FFFFFF)</option>
+        <option>Бежевый (#DDCAB2)</option>
+        <option>Жёлтый</option>
+        <option>Коричневый</option>
+      </select>
+    </div>
+
+    <div class="form-row">
+      <label>Данные для размещения на баннере</label>
+      <textarea id="f-details" placeholder="Название точки, адрес, номер телефона — если хотите добавить на баннер"></textarea>
+    </div>
+
+    <div class="form-row">
+      <label>Дополнительные пожелания</label>
+      <textarea id="f-notes" placeholder="Любые уточнения по заказу"></textarea>
+    </div>
+
+    <div class="form-submit">
+      <button class="btn-submit" id="submit-btn" type="button" onclick="submitForm()">Отправить заявку →</button>
+      <div class="form-note">После отправки менеджер по маркетингу свяжется с вами в течение 1 рабочего дня</div>
+    </div>
+
+    <div class="form-success" id="form-success">
+      <h4>✓ Заявка отправлена!</h4>
+      <p>Менеджер по маркетингу свяжется с вами в течение 1 рабочего дня для подтверждения заказа.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section class="section" id="custom">
+  <div class="custom-block">
+    <h3>💬 Нужно что-то другое?</h3>
+    <p>Если вас интересует другой формат вывески — лайтбоксы, объёмные буквы, нестандартный размер или индивидуальный дизайн — напишите нам, мы готовы рассмотреть любой запрос.</p>
+    <p>Oasis Agro — поставщик комбикормов, а не рекламное агентство. Стандартные баннеры мы предоставляем как часть поддержки партнёров. Нестандартные решения рассматриваются индивидуально и согласовываются с директором. Напишите — обсудим.</p>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section class="section" id="contacts">
+  <div class="contacts-card">
+    <div>
+      <h3>Менеджер по маркетингу</h3>
+      <p class="sub">По всем вопросам, связанным с баннерами и рекламными материалами</p>
+      <div class="contact-item">📱 <a href="tel:+996550191898">+996 550 191 898</a></div>
+      <div class="contact-item">💬 <a href="https://wa.me/996550191898">WhatsApp: +996 550 191 898</a></div>
+      <div class="contact-item">✉️ <a href="mailto:dariya@dutchnature.kg">dariya@dutchnature.kg</a></div>
+    </div>
+    <div class="contacts-right">
+      <img src="https://oasisagroorg.wordpress.com/wp-content/uploads/2026/08/d09ed0b0d0b7d0b8d181-d090d0b3d180d0be-d0bfd0bdd0b3.png" alt="Oasis Agro">
+      <div>Производитель комбикормов</div>
+      <div>Кыргызстан</div>
+      <div style="margin-top:6px;">oasisagro.kg</div>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  © 2026 Oasis Agro. Рекламные материалы для партнёров.
+</footer>
+
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <div class="lightbox-close">×</div>
+  <img id="lightbox-img" src="" alt="">
+</div>
+
+<script>
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby6mWPN_iF0G2xymHOsrVEa8wOEAw7-RTsOfYk4Z2P3T7r8OIpgdYe3it-q-RMvbEA/exec';
+
+  function openLightbox(src) {
+    document.getElementById('lightbox-img').src = src;
+    document.getElementById('lightbox').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeLightbox(); });
+
+  function submitForm() {
+    var required = ['f-name','f-contact','f-phone','f-banner','f-format','f-size','f-deadline'];
+    for (var i = 0; i < required.length; i++) {
+      if (!document.getElementById(required[i]).value.trim()) {
+        alert('Пожалуйста, заполните все обязательные поля (*)');
+        document.getElementById(required[i]).focus();
+        return;
+      }
+    }
+    var btn = document.getElementById('submit-btn');
+    btn.disabled = true;
+    btn.textContent = 'Отправляем...';
+
+    var data = {
+      name: document.getElementById('f-name').value,
+      contact: document.getElementById('f-contact').value,
+      phone: document.getElementById('f-phone').value,
+      whatsapp: document.getElementById('f-whatsapp').value,
+      banner: document.getElementById('f-banner').value,
+      format: document.getElementById('f-format').value,
+      size: document.getElementById('f-size').value,
+      color: document.getElementById('f-color').value,
+      details: document.getElementById('f-details').value,
+      deadline: document.getElementById('f-deadline').value,
+      notes: document.getElementById('f-notes').value
+    };
+
+    fetch(SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    }).then(function() {
+      document.getElementById('form-success').style.display = 'block';
+      btn.style.display = 'none';
+      document.querySelector('.form-note').style.display = 'none';
+    }).catch(function() {
+      alert('Произошла ошибка. Пожалуйста, свяжитесь с нами напрямую по телефону.');
+      btn.disabled = false;
+      btn.textContent = 'Отправить заявку →';
+    });
+  }
+</script>
+
+</body>
+</html>
